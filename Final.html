@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Aaru 💖</title>
+<style>
+  body{
+    margin:0;padding:0;height:100vh;
+    display:flex;justify-content:center;align-items:center;
+    background:linear-gradient(180deg,#ffd6e8,#fff0f6);
+    font-family:"Poppins",sans-serif;overflow:hidden;
+  }
+  .container{perspective:2500px;width:420px;height:650px;}
+  .card{position:relative;width:100%;height:100%;
+    transform-style:preserve-3d;transition:.9s ease;cursor:pointer;}
+  .card:hover{transform:rotateY(180deg);}
+  .front,.back{
+    position:absolute;width:100%;height:100%;
+    backface-visibility:hidden;border-radius:20px;
+    box-shadow:0 10px 40px rgba(255,120,180,.25);}
+  .front{
+    background:linear-gradient(180deg,#fff0f8,#ffdbea);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .front h1{color:#b00059;font-size:34px;margin-bottom:10px;}
+  .front p{color:#7a1a4b;font-size:17px;opacity:.8;}
+  .back{
+    background:linear-gradient(180deg,#fff,#ffe8f1);
+    transform:rotateY(180deg);padding:25px;box-sizing:border-box;
+    display:flex;flex-direction:column;align-items:center;
+    overflow-y:auto;scrollbar-width:thin;scrollbar-color:#ffb8d2 #fff;}
+  .img{width:100%;height:260px;border-radius:14px;overflow:hidden;margin-bottom:18px;}
+  .img img{width:100%;height:100%;object-fit:contain;background:#fff;}
+  .message{text-align:center;color:#7a1a4b;font-size:15px;line-height:1.7;padding:0 5px;}
+  .name{color:#c60060;font-weight:bold;margin-top:15px;font-size:18px;}
+  .floating-heart{position:absolute;font-size:18px;color:#ff6fae;animation:float linear forwards;opacity:.8;}
+  @keyframes float{to{transform:translateY(-110vh);opacity:0;}}
+  .ajith-mark{position:fixed;bottom:10px;left:10px;
+    background:rgba(255,255,255,.4);padding:6px 12px;border-radius:14px;
+    border:2px solid #ff7bb3;color:#b00059;font-size:14px;animation:fadeIn 2s ease forwards;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .music-controls{
+    position:fixed;bottom:25px;right:25px;
+    background:rgba(255,255,255,.9);padding:12px 18px;border-radius:40px;
+    box-shadow:0 4px 20px rgba(255,100,150,.2);display:flex;align-items:center;gap:10px;}
+  .music-controls button{
+    background:none;border:none;color:#b00059;font-weight:bold;
+    font-size:16px;cursor:pointer;}
+  input[type=range]{width:80px;cursor:pointer;}
+  @media(max-width:480px){.container{width:92vw;height:88vh;}.img{height:220px;}}
+</style>
+</head>
+
+<body>
+<div class="ajith-mark">Made by Ayu 💞</div>
+
+<div class="container">
+  <div class="card">
+    <div class="front">
+      <h1>For My Aaru 💖</h1>
+      <p>Tap to open 😚💌</p>
+    </div>
+
+    <div class="back">
+      <div class="img"><img src="Aaru_AYU.png" alt="Aaru & Ayu"></div>
+      <div class="message">
+        <p>Mere sahiba 💗<br>
+        ab se ap meri life me aaye ho na 🌸, sab kuch badal gaya hai ✨
+        Pehle sab simple tha 😔, par ab har cheez me apki feeling hoti hai 💞
+        Apki hasi 😍, apki baatein 💬, apka care 🤗... sab kuch mere dil ka hissa ban gaya hai 💗
+        Ap meri zindagi me khushiyaan 😊, pyaar ❤ aur sukoon 🕊 leke aaye ho 😘
+        Apke bina sab kuch adhoora lagta hai 🥺 😘<br><br>
+        🥺 Kya hua?  
+        Batao na meri jaan… kyu udaas ho ap? 😭💧  
+        Dil karta hai sab kuch chhod ke bas apke pass chala au 🥺 apko gale laga lu 🤗💞<br><br>
+        I know ki ye abhi possible nhi hai but soon I will come to meet u my love 💗 💞<br><br>
+        Main hamesha yahi hoon apke saath 🤝💖  
+        Jo bhi baat hai mujhe batao 💬, main sab theek kar dunga meri Aaru 💗<br><br>
+        <b>Apka sath kabhi nhi chorunga my love, I’m always with u in any situation 🥺🤝💖</b>
+        </p>
+      </div>
+      <div class="name">~ Yours, Ayu 🥰</div>
+    </div>
+  </div>
+</div>
+
+<div class="music-controls">
+  <button id="playPause">▶</button>
+  <button id="next">⏭</button>
+  <input id="volume" type="range" min="0" max="1" step="0.05" value="0.7">
+  <span id="songTitle" style="color:#b00059;font-weight:bold;font-size:13px;">Aashiq Tera  💖</span>
+</div>
+
+<audio id="music"></audio>
+
+<script>
+const songs=[
+ {src:"cupid.mp3",title:"Aashiq Tera  💖"},
+ {src:"song.mp3",title:"Ye Tune Kya Kiya 💞"},
+ {src:"song1.mp3",title:"Jhol  💫"},
+ {src:"song2.mp3",title:"Saathiya 💗"}];
+
+let current=0,isPlaying=false;
+const audio=document.getElementById("music");
+const title=document.getElementById("songTitle");
+const playBtn=document.getElementById("playPause");
+const nextBtn=document.getElementById("next");
+const vol=document.getElementById("volume");
+
+/* PRELOAD all songs for faster play */
+const preload = songs.map(s => { const a=new Audio(); a.src=s.src; a.preload="auto"; a.load(); return a; });
+
+function playSong(i){
+ audio.src=songs[i].src;
+ title.textContent=songs[i].title;
+ audio.play().then(()=>{isPlaying=true;playBtn.textContent="⏸";})
+ .catch(()=>{playBtn.textContent="▶";});
+}
+function togglePlay(){
+ if(isPlaying){audio.pause();isPlaying=false;playBtn.textContent="▶";}
+ else{audio.play();isPlaying=true;playBtn.textContent="⏸";}
+}
+playBtn.onclick=togglePlay;
+nextBtn.onclick=()=>{current=(current+1)%songs.length;playSong(current);};
+audio.onended=()=>{current=(current+1)%songs.length;playSong(current);};
+vol.oninput=()=>audio.volume=vol.value;
+
+/* Start immediately on first tap */
+window.addEventListener("click",()=>{if(!isPlaying)playSong(current);},{once:true});
+
+/* Floating hearts */
+function createHeart(){
+ const h=document.createElement("div");
+ h.className="floating-heart";h.textContent="❤";
+ h.style.left=Math.random()*100+"%";
+ h.style.bottom="-10px";
+ h.style.fontSize=14+Math.random()*28+"px";
+ h.style.animationDuration=6+Math.random()*5+"s";
+ document.body.appendChild(h);
+ setTimeout(()=>h.remove(),10000);
+}
+setInterval(createHeart,400);
+</script>
+</body>
+</html>
